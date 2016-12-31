@@ -4,5 +4,4 @@ Malatron is a piece of software (and algorithm) that utilizes machine learnign t
 
 Dependencies (subject to change):
 
-- Capstone
-- pefile
+- radare2 and the r2pipe API
