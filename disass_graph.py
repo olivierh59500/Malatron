@@ -27,4 +27,4 @@ def split_functions(file_path):
         pos += len(func_sig)
 
 if __name__ == '__main__':
-    # Gu's love
+    print "Gu's love."
