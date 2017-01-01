@@ -31,8 +31,6 @@ private:
 
     std::vector<std::vector<int>> st;
     std::vector<ac_node*> top;
-    std::map<ac_node*, int> buc;
-    std::map<ac_node*, int> top_pos;
     ac_node* root;
     std::vector<std::pair<int, int>> ind;
     void insert(const std::vector<int>& x, int in, ac_node* cur, int pos = 0) {
@@ -134,9 +132,6 @@ public:
             insert(s[i], i, root);
 
         bfs();
-        for (int i = 0; i < top.size(); i++)
-            top_pos[top[i]] = i;
-
         make_suff_links();
     }
 
