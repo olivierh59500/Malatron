@@ -4,7 +4,7 @@ import r2pipe
 
 def get_functions(r2):
     afl = r2.cmd('afl')
-    afl = afl.strip().split('\n')
+    afl = afl.split('\n')
     funcs = []
     for line in afl:
         gu = line.split(' ')
@@ -24,24 +24,24 @@ def disass_funcs(r2, funcs):
 
     return out
 
-def disass_all(r2):
-    return disass_funcs(r2, get_functions(r2))
-
+# full disass dump
 if __name__ == '__main__':
-    if len(sys.argv) < 4:
+    if len(sys.argv) < 3:
         raise # TODO: better error handling
 
     r2 = r2pipe.open(sys.argv[1])
-    r2.cmd('aa')
+    r2.cmd('aaa')
     r2.cmd('af')
     outfile = open(sys.argv[2], 'w')
-    option = sys.argv[3]
-    if option == 'all':
-        result = disass_all(r2)
-        for func in result:
-            outfile.write('Address ' + str(func[0]) + '\n')
-            outfile.write('Function ' + func[1] + '\n')
-            outfile.write(func[2] + '\n') # the disassembly
-            outfile.write('DONE\n')
-    else:
-        outfile.write(option + ' is an unsupported operation')
+    funcs = get_functions(r2)
+    result = disass_funcs(r2, funcs)
+    outfile.write('Functions:\n')
+    for f in funcs:
+        outfile.write(str(f[0]) + ' ' + f[1] + '\n')
+    
+    outfile.write('DONE\n')
+    for func in result:
+        outfile.write('Address ' + str(func[0]) + '\n')
+        outfile.write('Function ' + func[1] + '\n')
+        outfile.write(func[2] + '\n') # the disassembly
+        outfile.write('DONE\n')
