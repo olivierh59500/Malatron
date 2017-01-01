@@ -1,7 +1,6 @@
 #ifndef AHO_CORASICK_HPP
 #define AHO_CORASICK_HPP
 
-#include <iostream>
 #include <utility>
 #include <cstring>
 #include <vector>
@@ -18,9 +17,8 @@ private:
         ac_node* suff_link;
         ac_node* dict_link;
         int cnt, num;
-        bool vis;
         std::vector<int> ind;
-        ac_node() :p(nullptr), suff_link(nullptr), dict_link(nullptr), cnt(0), num(0), vis(false) {
+        ac_node() :p(nullptr), suff_link(nullptr), dict_link(nullptr), cnt(0), num(0) {
             std::memset(ch, 0, sizeof(ch));
         }
 
@@ -111,60 +109,6 @@ private:
             return f + query1(x, cur, pos + 1);
         } else {
             return f + query1(x, cur->ch[x[pos]], pos + 1);
-        }
-    }
-
-    void query2(const std::vector<int>& x, ac_node* cur, int pos = 0) {
-        if (pos == x.size())
-            return;
-
-        while (cur != root && cur->ch[x[pos]] == 0)
-            cur = cur->suff_link;
-
-        if (cur->ch[x[pos]] == 0) {
-            query2(x, cur, pos + 1);
-        } else {
-            buc[cur->ch[x[pos]]]++;
-            query2(x, cur->ch[x[pos]], pos + 1);
-        }
-    }
-
-    void get_ends(const std::vector<int>& x) {
-        buc.clear();
-        ind.clear();
-        query2(x, root);
-        std::vector<std::pair<int, ac_node*>> ok;
-        for (auto x = buc.begin(); x != buc.end(); x++)
-            ok.emplace_back(top_pos[x->first], x->first);
-
-        std::vector<std::pair<int, ac_node*>> mer;
-        for (const auto& y : ok) {
-            ac_node* z = y.second;
-            while (z != root && z->vis == 0) {
-                mer.emplace_back(top_pos[z], z);
-                z->vis = true;
-                z = z->dict_link;
-            }
-        }
-
-        ok = mer;
-        std::sort(ok.begin(), ok.end());
-        for (int i = ok.size() - 1; i >= 0; i--) {
-            if (ok[i].second == root)
-                break;
-
-            int t = buc[ok[i].second];
-            if (t > 0) {
-                for (int gu : ok[i].second->ind)
-                    ind.emplace_back(gu, t);
-
-                buc[ok[i].second->dict_link] += t;
-            }
-        }
-
-        std::sort(ind.begin(), ind.end());
-        for (const auto& gu : ok) {
-            gu.second->vis = false;
         }
     }
 
