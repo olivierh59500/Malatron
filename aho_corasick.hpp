@@ -16,7 +16,6 @@ private:
         ac_node* suff_link;
         ac_node* dict_link;
         int cnt, num;
-        std::vector<int> ind;
         ac_node() :p(nullptr), suff_link(nullptr), dict_link(nullptr), cnt(0), num(0) {
             std::memset(ch, 0, sizeof(ch));
         }
@@ -28,10 +27,7 @@ private:
         }
     };
 
-    std::vector<std::vector<int>> st;
-    std::vector<ac_node*> top;
     ac_node* root;
-    std::vector<std::pair<int, int>> ind;
     void insert(const std::vector<int>& x, int in, ac_node* cur, int pos = 0) {
         if (pos == x.size())
             return;
@@ -41,11 +37,9 @@ private:
             cur->ch[x[pos]]->p = cur;
         }
 
-        if (pos + 1 == x.size()) {
+        if (pos + 1 == x.size())
             cur->ch[x[pos]]->num++;
-            cur->ch[x[pos]]->ind.push_back(in);
-        }
-
+        
         insert(x, in, cur->ch[x[pos]], pos + 1);
     }
 
@@ -94,7 +88,7 @@ private:
         }
     }
 
-    int query1(const std::vector<int>& x, ac_node* cur, int pos = 0) {
+    int query(const std::vector<int>& x, ac_node* cur, int pos = 0) {
         if (pos == x.size())
             return cur->cnt;
 
@@ -103,9 +97,9 @@ private:
             cur = cur->suff_link;
 
         if (cur->ch[x[pos]] == 0) {
-            return f + query1(x, cur, pos + 1);
+            return f + query(x, cur, pos + 1);
         } else {
-            return f + query1(x, cur->ch[x[pos]], pos + 1);
+            return f + query(x, cur->ch[x[pos]], pos + 1);
         }
     }
 
@@ -115,7 +109,6 @@ private:
         while (!x.empty()) {
             ac_node* to = x.front();
             x.pop();
-            top.push_back(to);
             for (int i = 0; i < N; i++) {
                 if (to->ch[i] != nullptr) {
                     x.push(to->ch[i]);
@@ -135,7 +128,7 @@ public:
     }
 
     int count(const std::vector<int>& x) {
-        return query1(x, root);
+        return query(x, root);
     }
 
     ~aho_corasick() {
