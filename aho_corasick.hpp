@@ -5,7 +5,6 @@
 #include <cstring>
 #include <vector>
 #include <queue>
-#include <map>
 
 // aho corasick using integers 0 <= k < N
 template <int N> 
