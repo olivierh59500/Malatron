@@ -3,7 +3,6 @@
 #include <cstdlib>
 #include <unistd.h>
 #include <iomanip>
-#include <iostream>
 #include <sstream>
 
 PEX86::PEX86(const std::string& p) :path(p) {
