@@ -58,6 +58,16 @@ PEX86::PEX86(const std::string& p) :path(p) {
     }
 
     std::system("rm malatron_dout.txt");
+
+    // read the bytes:
+    std::ifstream binfile(path, std::ios::binary);
+    while (binfile) {
+        bytes.push_back(binfile.get());
+    }
+}
+
+std::vector<unsigned char> PEX86::get_bytes() {
+    return bytes;
 }
 
 std::vector<instructionX86> PEX86::flat_disass() {

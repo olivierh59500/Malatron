@@ -9,9 +9,11 @@ class PEX86 {
 private:
     std::string path;
     std::vector<funcX86*> funcs;
+    std::vector<unsigned char> bytes;
 public:
     PEX86(const std::string& p);
     std::vector<instructionX86> flat_disass();
+    std::vector<unsigned char> get_bytes();
     ~PEX86() {
         for (funcX86* f : funcs) {
             delete f;
