@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import os
 import sys
 import r2pipe
@@ -26,7 +28,7 @@ def disass_funcs(r2, funcs):
 
 # full disass dump
 if __name__ == '__main__':
-    if len(sys.argv) < 3:
+    if len(sys.argv) < 2:
         raise # TODO: better error handling
 
     r2 = r2pipe.open(sys.argv[1])
@@ -35,11 +37,6 @@ if __name__ == '__main__':
     outfile = open(sys.argv[2], 'w')
     funcs = get_functions(r2)
     result = disass_funcs(r2, funcs)
-    outfile.write('Functions:\n')
-    for f in funcs:
-        outfile.write(str(f[0]) + ' ' + f[1] + '\n')
-    
-    outfile.write('DONE\n')
     for func in result:
         outfile.write('Address ' + str(func[0]) + '\n')
         outfile.write('Function ' + func[1] + '\n')
