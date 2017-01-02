@@ -10,9 +10,10 @@ private:
     std::string path;
     std::vector<funcX86*> funcs;
     std::vector<unsigned char> bytes;
+    std::vector<instructionX86> flat_disass;
 public:
     PEX86(const std::string& p);
-    std::vector<instructionX86> flat_disass();
+    std::vector<instructionX86> get_flat_disass();
     std::vector<unsigned char> get_bytes();
     ~PEX86() {
         for (funcX86* f : funcs) {

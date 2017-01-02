@@ -51,6 +51,7 @@ PEX86::PEX86(const std::string& p) :path(p) {
             // this is just a bare bones version so that opcodes can be extracted
             // more is soon to come ._.
             instr.emplace_back(mnem, std::vector<std::string>(), address);
+            flat_disass.push_back(instr.back());
         }
 
         funcX86* func = new funcX86(instr, fname);
@@ -70,14 +71,6 @@ std::vector<unsigned char> PEX86::get_bytes() {
     return bytes;
 }
 
-std::vector<instructionX86> PEX86::flat_disass() {
-    std::vector<instructionX86> res;
-    for (funcX86* f : funcs) {
-        auto f_instr = f->get_instructions();
-        for (const instructionX86& i : f_instr) {
-            res.push_back(i);
-        }
-    }
-
-    return res;
+std::vector<instructionX86> PEX86::get_flat_disass() {
+    return flat_disass;
 }

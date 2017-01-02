@@ -5,7 +5,7 @@
 
 int main() {
     PEX86 pe("zeus.exe");
-    auto disass = pe.flat_disass();
+    auto disass = pe.get_flat_disass();
     std::map<std::string, int> gu;
     for (const instructionX86& i : disass) {
         gu[i.mnemonic]++;
