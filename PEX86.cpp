@@ -4,42 +4,42 @@
 #include <unistd.h>
 #include <iomanip>
 #include <sstream>
-
-PEX86::PEX86(const std::string& p) :path(p) {
+#include <iostream>
+PEX86::PEX86(const std::string& p) :path(p), timeout(false) {
     int pid = fork();
     if (pid == 0) {
+        alarm(300); // -_- 
         execlp("python", "python", "disass.py", p.c_str(), "malatron_dout.txt", NULL);
-        _exit(EXIT_FAILURE); // gu.
+        _exit(EXIT_FAILURE); // Gu.
     }
 
-    waitpid(pid, NULL, 0);
-    
+    int status;
+    waitpid(pid, &status, 0);
+    if (WIFSIGNALED(status) && WTERMSIG(status) == SIGALRM) {
+        timeout = true;
+        return;
+    }
+
     // snag the deets;
     std::ifstream stream("malatron_dout.txt");
-    while (stream) {
+    while (true) {
         std::string tmp;
         std::string fname;
-        int faddr;
+        addr_t faddr;
         std::vector<instructionX86> instr;
-        stream >> tmp >> faddr;
+        if (!(stream >> tmp >> faddr)) 
+            break;
+
         stream >> tmp >> fname;
         std::string line;
         while (std::getline(stream, line)) {
-            if (line.find("| 0x") == std::string::npos)
-                continue;
             if (line == "DONE")
                 break;
+            if (!(line.find("| 0x") == 0 || line.find("\\ 0x") == 0))
+                continue;
 
             line = line.substr(1);
-            int semi = line.find(';');
-            if (semi != std::string::npos) {
-                while (line.back() != ';')
-                    line.pop_back();
-
-                line.pop_back();
-            }
-
-            int address;
+            addr_t address;
             std::istringstream iss(line);
             iss >> std::hex >> address;
             iss >> std::hex >> tmp;
@@ -72,4 +72,11 @@ std::vector<unsigned char> PEX86::get_bytes() {
 
 std::vector<instructionX86> PEX86::get_flat_disass() {
     return flat_disass;
+}
+
+int main() {
+    PEX86 pe("out/malware10_Trojan.Regin");
+    for (auto x : pe.get_flat_disass())
+        std::cout << x.mnemonic << std::endl;
+    return 0;
 }
