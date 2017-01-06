@@ -5,12 +5,13 @@
 #include <iomanip>
 #include <sstream>
 #include <iostream>
+#include <map>
 
-PEX86::PEX86(const std::string& p) :path(p), timeout(false) {
+PEX86::PEX86(const std::string& p, const std::string& s, int tl) :path(p) {
     int pid = fork();
     if (pid == 0) {
-        alarm(300); // -_- 
-        execlp("python", "python", "disass.py", p.c_str(), "malatron_dout.txt", NULL);
+        alarm(tl); // -_- 
+        execlp("python", "python", s.c_str(), p.c_str(), "malatron_dout.txt", NULL);
         _exit(EXIT_FAILURE); // Gu.
     }
 
@@ -72,10 +73,20 @@ PEX86::PEX86(const std::string& p) :path(p), timeout(false) {
     }
 }
 
-std::vector<unsigned char> PEX86::get_bytes() {
-    return bytes;
-}
+std::vector<int> PEX86::get_intcodes(const std::string& file) {
+    std::ifstream infile(file);
+    std::map<std::string, int> mnem2op;
+    while (infile) {
+        std::string mnem;
+        int code;
+        infile >> mnem >> code;
+        mnem2op[mnem] = code;
+    }
 
-std::vector<instructionX86> PEX86::get_flat_disass() {
-    return flat_disass;
+    auto disass = this->get_flat_disass();
+    std::vector<int> result;
+    for (int i = 0; i < disass.size(); i++)
+        result.push_back(mnem2op[disass[i].mnemonic]);
+
+    return result;
 }

@@ -15,12 +15,20 @@ private:
     std::map<std::string, int> opcount;
     bool timeout;
 public:
-    PEX86(const std::string& p);
-    std::vector<instructionX86> get_flat_disass();
-    std::vector<unsigned char> get_bytes();
+    PEX86(const std::string& p, const std::string& s, int tl);
+    std::vector<instructionX86> get_flat_disass() {
+        return flat_disass;
+    }
+
+    std::vector<unsigned char> get_bytes() {
+        return bytes;
+    }
+
     int count(const std::string& op) {
         return opcount[op];
     }
+
+    std::vector<int> get_intcodes(const std::string& file);
 
     bool timed_out() {
         return timeout;
