@@ -18,7 +18,8 @@ struct metrics {
     }
 };
 
-const std::vector<std::string> anti_ops = {"cpuid", "int3", "rdtsc"};
+const std::vector<std::string> anti_ops = {"cpuid", "int", "rdtsc", "invalid", "sysenter", "sidt", "sgdt"};
+
 
 metrics count_metrics(const std::string& file) {
     PEX86 pe(file);
