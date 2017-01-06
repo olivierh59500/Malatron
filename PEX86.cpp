@@ -55,6 +55,7 @@ PEX86::PEX86(const std::string& p) :path(p), timeout(false) {
             // this is just a bare bones version so that opcodes can be extracted
             // more is soon to come ._.
             instr.emplace_back(mnem, std::vector<std::string>(), address);
+            opcount[mnem]++;
             flat_disass.push_back(instr.back());
         }
 
