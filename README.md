@@ -2,7 +2,7 @@
 
 Malatron is a piece of software (and algorithm) that utilizes machine learning to efficiently detect new unclassified malware.
 
-Authors: Wassim Omais and Shwetark Patel
+Authors: Wassim Omais, Shwetark Patel, and Aneesh Kotnana
 
 Dependencies (subject to change):
 
