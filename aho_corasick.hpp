@@ -126,7 +126,7 @@ public:
         bfs();
         make_suff_links();
     }
-
+    
     int count(const std::vector<int>& x) {
         return query(x, root);
     }

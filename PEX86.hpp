@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 #include "funcX86.hpp"
 
 class PEX86 {
@@ -11,11 +12,16 @@ private:
     std::vector<funcX86*> funcs;
     std::vector<unsigned char> bytes;
     std::vector<instructionX86> flat_disass;
+    std::map<std::string, int> opcount;
     bool timeout;
 public:
     PEX86(const std::string& p);
     std::vector<instructionX86> get_flat_disass();
     std::vector<unsigned char> get_bytes();
+    int count(const std::string& op) {
+        return opcount[op];
+    }
+
     bool timed_out() {
         return timeout;
     }
