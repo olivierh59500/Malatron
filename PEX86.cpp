@@ -37,6 +37,10 @@ PEX86::PEX86(const std::string& p) :path(p), timeout(false) {
                 break;
             if (!(line.find("| 0x") == 0 || line.find("\\ 0x") == 0))
                 continue;
+            
+            int t = line.find('~');
+            if (t != std::string::npos)
+                line = line.substr(0, t - 1) + line.substr(t + 1);
 
             line = line.substr(1);
             addr_t address;
@@ -72,11 +76,4 @@ std::vector<unsigned char> PEX86::get_bytes() {
 
 std::vector<instructionX86> PEX86::get_flat_disass() {
     return flat_disass;
-}
-
-int main() {
-    PEX86 pe("out/malware10_Trojan.Regin");
-    for (auto x : pe.get_flat_disass())
-        std::cout << x.mnemonic << std::endl;
-    return 0;
 }
